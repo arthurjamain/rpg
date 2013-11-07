@@ -8,6 +8,7 @@ define([
 
   return BaseObject.extend({
 
+    drawables: [],
     initialize: function(opt) {
 
       // Assign default values
@@ -28,22 +29,50 @@ define([
       console.info('Scene initialized.');
     },
 
-
     initCanvas: function() {
-      this.c1 = document.createElement('canvas');
-      this.c1.className = 'displayer';
-      this.c1.width = this.width;
-      this.c1.height = this.height;
+      this.mapCanvas = document.createElement('canvas');
+      this.mapCanvas.className = 'mapdisplayer';
+      this.mapCanvas.width = this.width;
+      this.mapCanvas.height = this.height;
+      this.mapCtx = this.mapCanvas.getContext('2d');
 
-      this.c2 = document.createElement('canvas');
-      this.c2.className = 'drawer';
-      this.c2.width = this.width;
-      this.c2.height = this.height;
+      this.mobCanvas = document.createElement('canvas');
+      this.mobCanvas.className = 'mobdisplayer';
+      this.mobCanvas.width = this.width;
+      this.mobCanvas.height = this.height;
+      this.mobCtx = this.mobCanvas.getContext('2d');
 
-      this.$container.append(this.c1);
-      this.$container.append(this.c2);
+      // Unused for now but should be used for offscreen rendering
+      this.drawerCanvas = document.createElement('canvas');
+      this.drawerCanvas.className = 'drawer';
+      this.drawerCanvas.width = this.width;
+      this.drawerCanvas.height = this.height;
 
-      console.info('Canvas initialized.');
+      this.$container.append(this.mapCanvas);
+      this.$container.append(this.mobCanvas);
+      this.$container.append(this.drawerCanvas);
+
+      console.info('Canvases initialized.');
+    },
+
+    // The actual main drawing loop
+    draw: function() {
+      for (var k in this.drawables) {
+        var ctx = (this.drawables[k].name === 'map') ? this.mapCtx : this.mobCtx;
+        this.drawables[k].draw(ctx)
+      }
+      requestAnimationFrame(this.draw.bind(this));
+    },
+
+    add: function(drawable) {
+      if (this.drawables.indexOf(drawable) < 0) {
+        this.drawables.push(drawable);
+      }
+    },
+
+    remove: function(drawable) {
+      var index = this.drawables.indexOf(drawable);
+      this.drawables.splice(index, 1);
     }
 
   });

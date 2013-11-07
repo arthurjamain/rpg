@@ -16,10 +16,10 @@ require.config({
 });
 
 define([
-  'js/game/Scene',
-], function(Scene) {
+  'js/game/Game',
+], function(Game) {
 
-  window.scene = new Scene({
+  window.Game = new Game({
     container: 'game'
   });
 

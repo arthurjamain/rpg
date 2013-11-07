@@ -6,13 +6,13 @@ define([
   B
 ) {
 
-  var obj = function(opt) {
+  var obj = function constructor (opt) {
     if (typeof this.initialize === 'function') {
       this.initialize(opt);
     }
   };
 
-  _.extend(obj, Backbone.Events, {
+  _.extend(obj.prototype, Backbone.Events, {
 
   });
 
