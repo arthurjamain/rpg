@@ -37,7 +37,11 @@ define([
         }
         ctx.closePath();
 
-        ctx.fillStyle = '#B6FF68';
+        if (this.type === 'grass') {
+          ctx.fillStyle = '#B6FF68';
+        } else if (this.type === 'water') {
+          ctx.fillStyle = '00F';
+        }
         ctx.fill();
 
       }

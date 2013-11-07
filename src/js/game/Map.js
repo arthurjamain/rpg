@@ -50,7 +50,7 @@ define([
         var tiles = mapFile.tiles;
         for (var k in tiles) {
           tiles[k].map = this;
-          this.tiles.push(new Tile(tiles[k]));
+          this.tiles[tiles[k].index] = new Tile(tiles[k]);
         }
 
         this.widthRatio = this.pxWidth / this.width;
