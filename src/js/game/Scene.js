@@ -48,6 +48,20 @@ define([
       this.drawerCanvas.width = this.width;
       this.drawerCanvas.height = this.height;
 
+      // Apply some layout styles
+      this.$container[0].style.position = 'relative;';
+      this.drawerCanvas.style.display = 'none';
+      var style = {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      };
+      _.extend(this.mapCanvas.style, style);
+      _.extend(this.mobCanvas.style, style);
+
+      // To the DOM we go.
       this.$container.append(this.mapCanvas);
       this.$container.append(this.mobCanvas);
       this.$container.append(this.drawerCanvas);

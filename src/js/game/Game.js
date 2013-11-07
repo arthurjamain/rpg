@@ -11,13 +11,25 @@ define([
 ) {
 
   return BaseObject.extend({
+    width: 800,
+    height: 600,
+
     initialize: function(opt) {
 
+      this.width = opt.width || this.width;
+      this.height = opt.height || this.height;
+
       this.scene = this.initScene({
-        container: opt.container
+        container: opt.container,
+        width: this.width,
+        height: this.height
       });
+
       this.map = this.createMap({
-        fileUri: 'src/maps/1.json'
+        fileUri: 'src/maps/1.json',
+        game: this,
+        width: this.width,
+        height: this.height
       });
 
       this.map.on('ready', function(map) {
