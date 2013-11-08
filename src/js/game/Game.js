@@ -32,6 +32,10 @@ define([
         height: this.height
       });
 
+      this.player = this.createPlayer({
+        model: 'player.png'
+      });
+
       this.map.on('ready', function(map) {
         this.scene.add(map);
         this.scene.draw();

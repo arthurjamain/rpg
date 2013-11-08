@@ -3,6 +3,11 @@
   "height": 64,
   "bordered": true,
 
+  "spawn": {
+    "x": 32,
+    "y": 20
+  },
+
   "tiles": [
     {
       "role"  : "border",
