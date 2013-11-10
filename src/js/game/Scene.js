@@ -85,6 +85,11 @@ define([
         this.resolveCollisions();
       }
 
+      var sinceLastFrame = Date.now() - (this.lastFrame || 0);
+      var sinceLastFrameRatio = sinceLastFrame / 1000;
+
+      this.lastFrame = Date.now();
+
       for (var k in this.drawables) {
         var ctx;
         if (this.drawables[k].id === 'map') {
@@ -96,6 +101,8 @@ define([
 
         ctx.widthRatio = this.map.widthRatio;
         ctx.heightRatio = this.map.heightRatio;
+        ctx.sinceLastFrame = sinceLastFrame;
+        ctx.sinceLastFrameRatio = sinceLastFrameRatio;
 
         this.drawables[k].draw(ctx);
       }

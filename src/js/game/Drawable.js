@@ -12,9 +12,6 @@ define([
       console.log('drawable init');
     },
     draw: function () {
-      this.sinceLastFrame = Date.now() - (this.lastFrame || 0);
-      this.sinceLastFrameRatio = this.sinceLastFrame / 1000;
-      this.lastFrame = Date.now();
     }
 
   });

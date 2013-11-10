@@ -5,11 +5,15 @@
   "borderWidth": 1,
 
   "player": {
-    "hitboxSize": 0.5,
+    "hitbox": {
+      "width": 2,
+      "height": 1
+    },
     "spawn": {
       "x": 320,
-      "y": 200
-    }
+      "y": 100
+    },
+    "speed": 10
   },
 
   "mob": {
