@@ -1,12 +1,14 @@
 define([
   'js/game/Drawable'
-], function(
+], function (
   Drawable
 ) {
 
   return Drawable.extend({
 
-    initialize: function(opt) {
+    id: 'tile',
+
+    initialize: function (opt) {
       this.role = opt.role;
       this.type = opt.type;
       this.map = opt.map;
@@ -19,7 +21,7 @@ define([
       }
     },
 
-    draw: function(ctx) {
+    draw: function (ctx) {
       if (this.role === 'border') {
         ctx.beginPath();
         ctx.fillStyle = '#5F2D09';

@@ -1,15 +1,23 @@
 define([
   'jquery',
+  'underscore',
+  'js/utils/geometry',
   'js/game/Object'
-], function(
+], function (
   $,
+  _,
+  Geometry,
   BaseObject
 ) {
 
   return BaseObject.extend({
 
     drawables: [],
-    initialize: function(opt) {
+    borders: null,
+    ranges: [],
+    player: null,
+    mobs: [],
+    initialize: function (opt) {
 
       // Assign default values
       _.defaults(opt, {
@@ -29,7 +37,7 @@ define([
       console.info('Scene initialized.');
     },
 
-    initCanvas: function() {
+    initCanvas: function () {
       this.mapCanvas = document.createElement('canvas');
       this.mapCanvas.className = 'mapdisplayer';
       this.mapCanvas.width = this.width;
@@ -52,11 +60,11 @@ define([
       this.$container[0].style.position = 'relative;';
       this.drawerCanvas.style.display = 'none';
       var style = {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
+        position  : 'absolute',
+        top       : 0,
+        left      : 0,
+        right     : 0,
+        bottom    : 0
       };
       _.extend(this.mapCanvas.style, style);
       _.extend(this.mobCanvas.style, style);
@@ -70,25 +78,83 @@ define([
     },
 
     // The actual main drawing loop
-    draw: function() {
+    draw: function () {
+
+      this.resetCollitions();
+      if (this.player) {
+        this.resolveCollisions();
+      }
+
       for (var k in this.drawables) {
-        var ctx = (this.drawables[k].name === 'map') ? this.mapCtx : this.mobCtx;
-        this.drawables[k].draw(ctx)
-      }
-      requestAnimationFrame(this.draw.bind(this));
-    },
+        var ctx;
+        if (this.drawables[k].id === 'map') {
+          ctx = this.mapCtx;
+        } else {
+          this.mobCanvas.width = this.mobCanvas.width; // clear canvas
+          ctx = this.mobCtx;
+        }
 
-    add: function(drawable) {
-      if (this.drawables.indexOf(drawable) < 0) {
-        this.drawables.push(drawable);
-      }
-    },
+        ctx.widthRatio = this.map.widthRatio;
+        ctx.heightRatio = this.map.heightRatio;
 
-    remove: function(drawable) {
+        this.drawables[k].draw(ctx);
+      }
+      window.requestAnimationFrame(this.draw.bind(this));
+    },
+    resetCollitions: function () {
+      this.player.collidingLeft = false;
+      this.player.collidingRight = false;
+      this.player.collidingUp = false;
+      this.player.collidingDown = false;
+    },
+    resolveCollisions: function () {
+      var processingRect = [
+        { x: this.player.position.x - 20, y: this.player.position - 20},
+        { x: this.player.position.x - 20, y: this.player.position + 20},
+        { x: this.player.position.x + 20, y: this.player.position + 20},
+        { x: this.player.position.x + 20, y: this.player.position - 20}
+      ];
+
+      if (this.map.mapPreferences.bordered &&
+          (this.player.position.x - this.player.hitboxSize * this.map.widthRatio) < this.map.mapPreferences.borderWidth * this.map.widthRatio) {
+        this.player.position.x = this.map.mapPreferences.borderWidth * this.map.widthRatio + this.player.hitboxSize * this.map.widthRatio;
+        this.player.collidingLeft = true;
+      }
+      if (this.map.mapPreferences.bordered &&
+          this.player.position.x + this.player.hitboxSize * this.map.widthRatio > this.map.pxWidth - this.map.mapPreferences.borderWidth * this.map.widthRatio) {
+        this.player.position.x = this.map.pxWidth - this.map.mapPreferences.borderWidth * this.map.widthRatio - this.player.hitboxSize * this.map.widthRatio;
+        this.player.collidingRight = true;
+      }
+      if (this.map.mapPreferences.bordered &&
+          this.player.position.y - this.player.hitboxSize * this.map.heightRatio < this.map.mapPreferences.borderWidth * this.map.widthRatio) {
+        this.player.position.y = this.map.mapPreferences.borderWidth * this.map.widthRatio + this.player.hitboxSize * this.map.widthRatio;
+        this.player.collidingUp = true;
+      }
+      if (this.map.mapPreferences.bordered &&
+          this.player.position.y + this.player.hitboxSize * this.map.heightRatio > this.map.pxHeight - this.map.mapPreferences.borderWidth * this.map.heightRatio) {
+        this.player.position.y = this.map.pxHeight - this.map.mapPreferences.borderWidth * this.map.heightRatio - this.player.hitboxSize * this.map.heightRatio;
+        this.player.collidingDown = true;
+      }
+
+
+    },
+    add: function (drawable) {
+
+      this.drawables.push(drawable);
+
+      if (drawable.id === 'player') {
+        this.player = drawable;
+      }
+      else if (drawable.id === 'map') {
+        this.map = drawable;
+      }
+
+    },
+    remove: function (drawable) {
       var index = this.drawables.indexOf(drawable);
       this.drawables.splice(index, 1);
     }
 
   });
 
-})
+});

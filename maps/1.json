@@ -1,0 +1,49 @@
+{
+  "width": 102,
+  "height": 64,
+  "bordered": true,
+  "borderWidth": 1,
+
+  "player": {
+    "hitboxSize": 0.5,
+    "spawn": {
+      "x": 320,
+      "y": 200
+    }
+  },
+
+  "mob": {
+
+  },
+
+  "tiles": [
+    {
+      "tile"  : "border",
+      "material"  : "rock",
+      "width" : 1,
+      "index" : 99
+    },
+    {
+      "tile"  : "range",
+      "material"  : "grass",
+      "index" : 1,
+      "range" : [
+        {"x": 1,"y":  1},
+        {"x": 1, "y": 63},
+        {"x": 102, "y": 63},
+        {"x": 102, "y": 1}
+      ]
+    },
+    {
+      "tile"  : "range",
+      "material"  : "water",
+      "index" : 2,
+      "range" : [
+        {"x": 10, "y": 10},
+        {"x": 10, "y": 30},
+        {"x": 40, "y": 30},
+        {"x": 40, "y": 10}
+      ]
+    }
+  ]
+}

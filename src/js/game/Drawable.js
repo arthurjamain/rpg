@@ -1,18 +1,20 @@
 define([
   'js/game/Object'
-], function(
+], function (
   BaseObject
 ) {
 
   return BaseObject.extend({
 
+    id: 'drawable',
     name: 'Generic Drawable',
-    initialize: function(opt) {
+    initialize: function (opt) {
       console.log('drawable init');
     },
-    draw: function() {
-
-      console.info(this.name + ' : draw');
+    draw: function () {
+      this.sinceLastFrame = Date.now() - (this.lastFrame || 0);
+      this.sinceLastFrameRatio = this.sinceLastFrame / 1000;
+      this.lastFrame = Date.now();
     }
 
   });
