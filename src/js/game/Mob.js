@@ -51,12 +51,23 @@ define([
 
     },
 
+    getHitBox: function () {
+      return [
+        { x: this.position.x - this.hbw / 2, y: this.position.y - this.hbh / 2 },
+        { x: this.position.x + this.hbw / 2, y: this.position.y - this.hbh / 2 },
+        { x: this.position.x + this.hbw / 2, y: this.position.y + this.hbh / 2 },
+        { x: this.position.x - this.hbw / 2, y: this.position.y + this.hbh / 2 }
+      ];
+    },
+
     draw: function (ctx) {
+
+
+      this.hbw = this.hitbox.width * ctx.widthRatio;
+      this.hbh = this.hitbox.height * ctx.heightRatio;
 
       Drawable.prototype.draw.call(this, ctx);
 
-      var hbw = this.hitbox.width * ctx.widthRatio;
-      var hbh = this.hitbox.height * ctx.heightRatio;
       var movements = {};
 
       if (this.movingLeft && !this.collidingLeft) {
@@ -80,12 +91,12 @@ define([
 
       ctx.beginPath();
       ctx.save();
-      //ctx.rotate((this.orientation.angle * 57.2) * 180 / Math.PI);
+      ctx.rotate((this.orientation.angle * 57.2) * Math.PI / 180);
       ctx.rect(
-        this.position.x - hbw / 2,
-        this.position.y - hbh / 2,
-        hbw,
-        hbh
+        this.position.x - this.hbw / 2,
+        this.position.y - this.hbh / 2,
+        this.hbw,
+        this.hbh
       );
       ctx.fillStyle = '#953A8C';
       ctx.fill();
