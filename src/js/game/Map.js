@@ -28,7 +28,10 @@ define([
     pxHeight      : 0,
     width         : 0,
     height        : 0,
+    collisions    : true,
     materials     : { },
+    tiles         : [ ],
+    collidables   : [ ],
 
     initialize: function (opt) {
 
@@ -37,6 +40,7 @@ define([
 
       this.pxWidth = opt.width;
       this.pxHeight = opt.height;
+      this.quadrants = opt.quadrants;
 
       if (opt.fileUri) {
         this.loadMap(opt.fileUri, function (error, mapFile) {
@@ -68,7 +72,8 @@ define([
       this.height = mapFile.height;
       this.widthRatio = this.pxWidth / this.width;
       this.heightRatio = this.pxHeight / this.height;
-      this.tiles = [];
+      this.quadrantWidth = this.pxWidth / this.quadrants.x;
+      this.quadrantHeight = this.pxHeight / this.quadrants.y;
 
       var tiles = mapFile.tiles;
       async.eachLimit(
@@ -79,16 +84,33 @@ define([
           t.map = this;
           this.forgeTile(t, function (tile) {
             this.tiles[t.index] = tile;
+            if (tile.id === 'borders') {
+              this.borders = tile;
+            } else if (tile.collisions) {
+              this.collidables.push(tile);
+              this.assignQuadrants(tile);
+            }
             done();
           }.bind(this));
         }.bind(this),
 
         function () {
-          delete mapFile.tiles;
+          //delete mapFile.tiles;
           if (typeof cb === 'function') { cb(); }
         }.bind(this)
 
       );
+
+    },
+
+    assignQuadrants: function (tile) {
+      var xSpan = Math.ceil((tile.boundingRect.width * this.widthRatio) / this.quadrantWidth);
+      var ySpan = Math.ceil((tile.boundingRect.height * this.heightRatio) / this.quadrantHeight);
+
+      var minXQuadrant = Math.floor((tile.boundingRect.x * this.widthRatio) / this.quadrantWidth);
+      var minYQuadrant = Math.floor((tile.boundingRect.y * this.heightRatio) / this.quadrantHeight);
+
+      tile.quadrants = { x: minXQuadrant, y: minYQuadrant, width: xSpan, height: ySpan };
 
     },
 

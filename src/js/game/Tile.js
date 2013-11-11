@@ -9,16 +9,14 @@ define([
     id: 'tile',
 
     initialize: function (opt) {
-      this.role = opt.role;
-      this.type = opt.type;
+      this.tile = opt.tile;
+      this.material = opt.material;
       this.map = opt.map;
-
+      this.collisions = opt.collisions;
       if (opt.width) {
         this.width = opt.width;
       }
-      if (opt.range) {
-        this.range = opt.range;
-      }
+
     },
 
     draw: function (ctx) {

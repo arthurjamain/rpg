@@ -1,7 +1,47 @@
-define([], function() {
+define([], function () {
+
+
+  String.prototype.capitalize = function () {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  };
 
   return {
 
+    getOrientedTranslationMatrix: function (dir) {
+
+      switch (dir) {
+      case 'up':
+        return {x: 0, y: 1};
+      case 'down':
+        return {x: 0, y: -1};
+      case 'left':
+        return {x: -1, y: 0};
+      case 'right':
+        return {x: 1, y: 0};
+      case 'up-left':
+        return {x: -1, y: 1};
+      case 'up-right':
+        return {x: 1, y: 1};
+      case 'down-left':
+        return {x: -1, y: -1};
+      case 'down-right':
+        return {x: 1, y: -1};
+      }
+
+      return {x: 0, y: 0};
+
+    },
+    // rotate {x, y} of 'radian' degrees around {cx, cy}
+    rotate : function (cx, cy, x, y, radians) {
+      var cos = Math.cos(radians),
+          sin = Math.sin(radians),
+          nx = (cos * (x - cx)) - (sin * (y - cy)) + cx,
+          ny = (sin * (x - cx)) + (cos * (y - cy)) + cy;
+      return { x: nx, y: ny };
+    },
+    doParallelRectanglesCollide: function (a, b) {
+      return !(a.x > b.x + b.width || a.x + a.width < b.x || a.y > b.y + b.height || a.y + a.height < b.y);
+    },
     /**
      * Helper function to determine whether there is an intersection between the two polygons described
      * by the lists of vertices. Uses the Separating Axis Theorem
@@ -67,6 +107,5 @@ define([], function() {
       }
       return true;
     }
-  }
-
+  };
 });

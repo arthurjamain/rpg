@@ -17,9 +17,9 @@ require.config({
 
 define([
   'js/game/Game',
-], function(Game) {
+], function (Game) {
 
-  window.Game = new Game({
+  window.game = new Game({
     container: 'game'
   });
 

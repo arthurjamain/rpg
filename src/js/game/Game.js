@@ -18,6 +18,10 @@ define([
 
     width: 1440,
     height: 900,
+    /**
+     * A quadrant is a collision detection zone. This indicates how many times the canvas is sliced.
+     */
+    quadrants: {x: 10, y: 10},
 
     initialize: function (opt) {
 
@@ -34,14 +38,14 @@ define([
         fileUri: 'maps/1.json',
         game: this,
         width: this.width,
-        height: this.height
+        height: this.height,
+        quadrants: this.quadrants
       });
 
       this.bindKeys();
 
       this.map.on('ready', function () {
 
-        console.log(this.map.mapPreferences.player);
         this.player = this.createPlayer(this.map.mapPreferences.player);
 
         this.scene.add(this.map);
