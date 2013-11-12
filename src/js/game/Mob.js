@@ -40,8 +40,13 @@ define([
         } else {
           name = keys[1] + '-' + keys[0];
         }
-
-        return {name: name, angle: (bigger - (bigger - smaller) / 2), bi: true};
+        var angle;
+        if (name === 'up-right') {
+          angle = 7 * Math.PI / 4;
+        } else {
+          angle = (bigger - (bigger - smaller) / 2);
+        }
+        return {name: name, angle: angle, bi: true};
 
       } else if (keys.length === 1) {
         return {name: keys[0], angle: mvts[keys[0]], bi: false};
@@ -72,74 +77,62 @@ define([
       var movements = {};
 
       if (this.movingLeft && !this.collidingLeft) {
-        movements.left = 3 * Math.PI / 2;
+        movements.left = Math.PI;
       }
       if (this.movingRight && !this.collidingRight) {
-        movements.right = Math.PI / 2;
+        movements.right = 0;
       }
       if (this.movingUp && !this.collidingUp) {
-        movements.up = 0;
+        movements.up = 3 * Math.PI / 2;
       }
       if (this.movingDown && !this.collidingDown) {
-        movements.down = Math.PI;
+        movements.down = Math.PI / 2;
       }
 
       if (this.movingUp || this.movingDown || this.movingLeft || this.movingRight) {
         this.assignQuadrants(ctx);
-      }
 
-      this.orientation = this.getOrientation(movements);
+        this.orientation = this.getOrientation(movements);
 
+        var xPos = 0,
+            yPos = 0;
 
-      var xPos = this.position.x, yPos = this.position.y;
-      if (this.movingLeft) {
-        xPos = this.position.x - 10 * ctx.sinceLastFrameRatio * ctx.widthRatio;
-      }
-      if (this.movingRight) {
-        xPos = this.position.x + 10 * ctx.sinceLastFrameRatio * ctx.widthRatio;
-      }
-      if (this.movingUp) {
-        yPos = this.position.y - 10 * ctx.sinceLastFrameRatio * ctx.heightRatio;
-      }
-      if (this.movingDown) {
-        yPos = this.position.y + 10 * ctx.sinceLastFrameRatio * ctx.heightRatio;
-      }
-
-
-      var collisions = ctx.scene.resolveCollisions(this);
-
-      _.each(collisions, function (col) {
-        for (var i = 0 ; i < col.collisions.length ; i += 1) {
-          this[col.collisions[i]] = true;
+        if (this.movingLeft || this.movingRight) {
+          xPos = Math.cos(this.orientation.angle) * 10 * ctx.sinceLastFrameRatio * ctx.widthRatio;
+        }
+        if (this.movingUp || this.movingDown) {
+          yPos = Math.sin(this.orientation.angle) * 10 * ctx.sinceLastFrameRatio * ctx.heightRatio;
         }
 
-        if (this.collidingDown || this.collidingLeft || this.collidingUp || this.collidingRight) {
-          var edge = col.obj.getClosestEdge({x: this.position.x, y: this.position.y});
+        var collisions = ctx.scene.resolveCollisions(this);
+        _.each(collisions, function (col) {
 
-          var normal = {x: - (edge[1].y - edge[0].y), y: edge[1].x - edge[0].x};
+          for (var i = 0 ; i < col.collisions.length ; i += 1) {
+            this[col.collisions[i]] = true;
+          }
 
-          var angle = Math.atan2(normal.y - 0, normal.x - 0);
-          console.log(normal, angle * 180/Math.PI);
+          if (this.collidingDown || this.collidingLeft || this.collidingUp || this.collidingRight) {
+            var edge = col.obj.getClosestEdge({x: this.position.x, y: this.position.y});
+            var normal = {x: geometry.sign(- (edge[1].y - edge[0].y)), y: geometry.sign(edge[1].x - edge[0].x)};
+            var angle = Math.atan2(normal.y - 0, normal.x - 0);
+            var vector = {x: normal.x + geometry.sign(xPos), y: normal.y + geometry.sign(yPos)};
+            console.log(normal, {x: geometry.sign(xPos), y: geometry.sign(yPos)}, vector);
+          }
+
+        }.bind(this));
+
+        if (this.collidingUp || this.collidingDown) {
+          yPos = 0;
+        }
+        if (this.collidingLeft || this.collidingRight) {
+          xPos = 0;
         }
 
-      }.bind(this));
+        this.previousPosition = this.position;
+        this.position.x += xPos;
+        this.position.y += yPos;
+      }
 
-
-      if (this.collidingDown) {
-        yPos = this.position.y - 1;
-      }
-      if (this.collidingUp) {
-        yPos = this.position.y + 1;
-      }
-      if (this.collidingLeft) {
-        xPos = this.position.x + 1;
-      }
-      if (this.collidingRight) {
-        xPos = this.position.x - 1;
-      }
-      this.previousPosition = this.position;
-      this.position.x = xPos;
-      this.position.y = yPos;
       this.drawModel(ctx);
     },
 

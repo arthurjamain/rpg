@@ -7,6 +7,7 @@ define([], function () {
 
   return {
 
+    sign: function(x) { return x ? x < 0 ? -1 : 1 : 0; },
     getOrientedTranslationMatrix: function (dir) {
 
       switch (dir) {
