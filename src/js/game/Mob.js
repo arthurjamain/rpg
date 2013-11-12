@@ -98,10 +98,10 @@ define([
             yPos = 0;
 
         if (this.movingLeft || this.movingRight) {
-          xPos = Math.cos(this.orientation.angle) * 10 * ctx.sinceLastFrameRatio * ctx.widthRatio;
+          xPos = Math.cos(this.orientation.angle);
         }
         if (this.movingUp || this.movingDown) {
-          yPos = Math.sin(this.orientation.angle) * 10 * ctx.sinceLastFrameRatio * ctx.heightRatio;
+          yPos = Math.sin(this.orientation.angle);
         }
 
         var collisions = ctx.scene.resolveCollisions(this);
@@ -113,24 +113,21 @@ define([
 
           if (this.collidingDown || this.collidingLeft || this.collidingUp || this.collidingRight) {
             var edge = col.obj.getClosestEdge({x: this.position.x, y: this.position.y});
-            var normal = {x: geometry.sign(- (edge[1].y - edge[0].y)), y: geometry.sign(edge[1].x - edge[0].x)};
+            var normal = {x: - (edge[1].y - edge[0].y), y: edge[1].x - edge[0].x};
             var angle = Math.atan2(normal.y - 0, normal.x - 0);
-            var vector = {x: normal.x + geometry.sign(xPos), y: normal.y + geometry.sign(yPos)};
-            console.log(normal, {x: geometry.sign(xPos), y: geometry.sign(yPos)}, vector);
+            var vector = {x: xPos + Math.cos(angle), y: yPos - Math.sin(angle)};
+
+            if (vector.x < 0) { vector.x = 0; }
+            if (vector.y < 0) { vector.y = 0; }
+
+            xPos *= vector.x;
+            yPos *= vector.y;
           }
 
         }.bind(this));
 
-        if (this.collidingUp || this.collidingDown) {
-          yPos = 0;
-        }
-        if (this.collidingLeft || this.collidingRight) {
-          xPos = 0;
-        }
-
-        this.previousPosition = this.position;
-        this.position.x += xPos;
-        this.position.y += yPos;
+        this.position.x += xPos * 10 * ctx.sinceLastFrameRatio * ctx.widthRatio;
+        this.position.y += yPos * 10 * ctx.sinceLastFrameRatio * ctx.heightRatio;
       }
 
       this.drawModel(ctx);
