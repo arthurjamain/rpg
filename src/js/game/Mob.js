@@ -115,13 +115,9 @@ define([
             var edge = col.obj.getClosestEdge({x: this.position.x, y: this.position.y});
             var normal = {x: - (edge[1].y - edge[0].y), y: edge[1].x - edge[0].x};
             var angle = Math.atan2(normal.y - 0, normal.x - 0);
-            var vector = {x: xPos + Math.cos(angle), y: yPos - Math.sin(angle)};
-
-            if (vector.x < 0) { vector.x = 0; }
-            if (vector.y < 0) { vector.y = 0; }
-
-            xPos *= vector.x;
-            yPos *= vector.y;
+            var vector = {x: Math.cos(angle), y: Math.sin(angle)};
+            xPos += vector.x;
+            yPos += vector.y;
           }
 
         }.bind(this));

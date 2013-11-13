@@ -1,6 +1,8 @@
 define([
+  'js/utils/geometry',
   'js/game/Tile'
 ], function (
+  geometry,
   Tile
 ) {
 
@@ -74,16 +76,19 @@ define([
           {x: this.range[i - 1].x * this.map.widthRatio, y: this.range[i - 1].y * this.map.heightRatio},
           {x: this.range[it].x * this.map.widthRatio, y: this.range[it].y * this.map.heightRatio}
         ];
-
+/*
         var meanPoint = {
           x: Math.min(edge[0].x, edge[1].x) + Math.abs(edge[0].x - edge[1].x) / 2,
           y: Math.min(edge[0].y, edge[1].y) + Math.abs(edge[0].y - edge[1].y) / 2
         };
 
         var diffXY = Math.min(Math.abs(meanPoint.y - point.y), Math.abs(meanPoint.x - point.x));
+*/
 
-        if (diffXY < minXY) {
-          minXY = diffXY;
+        var dist = geometry.distToSegment(point, edge[0], edge[1]);
+
+        if (dist < minXY) {
+          minXY = dist;
           chosenOne = edge;
         }
 
