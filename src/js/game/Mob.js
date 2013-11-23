@@ -23,6 +23,8 @@ define([
       this.dimensions = opt.dimensions || { width: 1, height: 1 };
       this.speed = opt.speed || 10;
       this.orientation = { name: 'up', angle: 0 };
+      this.spriteSrc = opt.sprite || '/sprites/player.png';
+      this.loadSprite(this.spriteSrc);
     },
 
     getOrientation: function (mvts) {
@@ -171,36 +173,15 @@ define([
       this.quadrants = { x: minXQuadrant, y: minYQuadrant, width: xSpan, height: ySpan };
 
     },
-
-    getOrientedWidth: function () {
-      switch (this.orientation.name) {
-      case 'up':
-      case 'down':
-        return this.hbw;
-      case 'left':
-      case 'right':
-        return this.hbh;
-      case 'up-left':
-      case 'down-right':
-      case 'down-left':
-      case 'up-right':
-        return this.hbw - this.hbw / 3;
-      }
+    isMoving: function() {
+      return this.movingDown || this.movingUp || this.movingRight || this.movingLeft;
     },
-    getOrientedHeight: function () {
-      switch (this.orientation.name) {
-      case 'up':
-      case 'down':
-        return this.hbh;
-      case 'left':
-      case 'right':
-        return this.hbw;
-      case 'up-left':
-      case 'down-right':
-      case 'down-left':
-      case 'up-right':
-        return this.hbh - this.hbh / 3;
-      }
+    loadSprite: function(spriteSrc) {
+      this.sprite = new Image();
+      this.sprite.onload = function () {
+
+      };
+      this.sprite.src = spriteSrc;
     }
 
   });

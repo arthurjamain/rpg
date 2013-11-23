@@ -115,26 +115,6 @@ define([
     },
     resolveCollisions: function (mob) {
       var hb = mob.getHitBox();
-      if (this.map.borders) {
-        /*
-        if (mob.position.x - (mob.getOrientedWidth() / 2) < this.map.borders.pxWidth) {
-          mob.collidingLeft = true;
-          mob.position.x = this.map.borders.pxWidth + mob.getOrientedWidth() / 2 - 1;
-        }
-        else if (mob.position.x + (mob.getOrientedWidth() / 2) > this.map.pxWidth - this.map.borders.pxWidth) {
-          mob.collidingRight = true;
-          mob.position.x = this.map.pxWidth - this.map.borders.pxWidth - mob.getOrientedWidth() / 2 + 1;
-        }
-        if (mob.position.y - (mob.getOrientedHeight() / 2) < this.map.borders.pxHeight) {
-          mob.collidingUp = true;
-          mob.position.y = this.map.borders.pxHeight + mob.getOrientedHeight() / 2 - 1;
-        }
-        else if (mob.position.y + (mob.getOrientedHeight() / 2) > this.map.pxHeight - this.map.borders.pxHeight) {
-          mob.collidingDown = true;
-          mob.position.y = this.map.pxHeight - this.map.borders.pxHeight - mob.getOrientedHeight() / 2 + 1;
-        }
-        */
-      }
       var collisions = [];
       _.each(this.map.collidables, function (collidable) {
 

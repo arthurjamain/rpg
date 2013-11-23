@@ -6,9 +6,10 @@
 
   "player": {
     "dimensions": {
-      "width": 2,
-      "height": 1
+      "width": 3,
+      "height": 4
     },
+    "sprite": "/sprites/player.png",
     "spawn": {
       "x": 920,
       "y": 100
